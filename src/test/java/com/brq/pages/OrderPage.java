@@ -10,23 +10,23 @@ import org.openqa.selenium.support.How;
 
 public class OrderPage {
 	@FindBy(how = How.ID, id = "summary_products_quantity")
-	WebElement qtyItensOnCart;
+	private WebElement qtyItensOnCart;
 	@FindBy(how = How.XPATH, xpath = "*//a[@class='button btn btn-default standard-checkout button-medium']")
-	WebElement procedeCheckout;
+	private WebElement procedeCheckout;
 
 	@FindBy(how = How.XPATH, xpath = "*//tbody/tr")
-	List<WebElement> qtyRows;
+	private List<WebElement> qtyRows;
 
-	WebDriver driver;
-	
+	private WebDriver driver;
+
 	public OrderPage(WebDriver driver) {
 		this.driver = driver;
-		//this.qtyRows = 
+		// this.qtyRows =
 	}
 
 	public int qtyItensTypeOnCart() {
 		return qtyRows.size();
-		
+
 	}
 
 	public int qtyItensOnCart() {

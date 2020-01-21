@@ -6,16 +6,23 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.brq.pages.AddressPage;
 import com.brq.pages.HomePage;
+import com.brq.pages.OrderConfirmPage;
 import com.brq.pages.OrderPage;
+import com.brq.pages.PaymentPage;
 import com.brq.pages.ProductSelectedInfoPage;
+import com.brq.pages.RegisterPage;
+import com.brq.pages.ShippingPage;
 import com.brq.pages.SignInPage;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Single;
+
+import net.bytebuddy.utility.RandomString;
 
 public class Desafio {
 
@@ -72,13 +79,50 @@ public class Desafio {
 		// formulários.
 		waiter.until(ExpectedConditions.not(ExpectedConditions.urlToBe(currentUrl)));
 		SignInPage signinPage = PageFactory.initElements(driver, SignInPage.class);
-		signinPage.setTxtRegEmail("teste_brq@email.com");
+		RandomString rndstr = new RandomString(12);
+		String email = "jwick" + rndstr.nextString() + "@test.com";
+
+		signinPage.setTxtRegEmail(email);
+		currentUrl = driver.getCurrentUrl();
 		signinPage.clickBtnCreateAcc();
+
+		waiter.until(ExpectedConditions.not(ExpectedConditions.urlToBe(currentUrl)));
+		RegisterPage regPage = PageFactory.initElements(driver, RegisterPage.class);
+		regPage.fillFormWithData("Male", "John", "Wick", email, "qawsedrf1@3$", "John", "Wick", "Washington Street",
+				"Manhathan", "New York", "00000", 86563144);
+		currentUrl = driver.getCurrentUrl();
+		regPage.clickBtnRegister();
+
+		// 7. Valide se o endereço está correto e prossiga.
+//		waiter.until(ExpectedConditions.not(ExpectedConditions.urlToBe(currentUrl)));
+		AddressPage adPage = PageFactory.initElements(driver, AddressPage.class);
+		currentUrl = driver.getCurrentUrl();
+		adPage.clickBtnProcede();
+
+		// 8. Aceite os termos de serviço e prossiga.
+		waiter.until(ExpectedConditions.not(ExpectedConditions.urlToBe(currentUrl)));
+		currentUrl = driver.getCurrentUrl();
+		ShippingPage shipPage = PageFactory.initElements(driver, ShippingPage.class);
+		shipPage.checkTheAgree();
+		shipPage.clickBtnProcede();
+
+		// 9. Valide o valor total da compra.
+		waiter.until(ExpectedConditions.not(ExpectedConditions.urlToBe(currentUrl)));
+		PaymentPage payPage = PageFactory.initElements(driver, PaymentPage.class);
+		currentUrl = driver.getCurrentUrl();
+		Assert.assertEquals("$29.00", payPage.getTotalValue().trim());
+
+		// 10. Selecione um método de pagamento e prossiga.
+		payPage.payWithCreditCard();
+		waiter.until(ExpectedConditions.not(ExpectedConditions.urlToBe(currentUrl)));
+
+		// 11. Confirme a compra e valide se foi finalizada com sucesso.
+		OrderConfirmPage orderConfirmPage = PageFactory.initElements(driver, OrderConfirmPage.class);
+		orderConfirmPage.clickBtnProcede();
 		
-		
-		Thread.sleep(2000);
-		
-		
+		WebElement completeElement = driver.findElement(By.xpath("*//div[@class='box']/p/strong[@class='dark']"));
+		Assert.assertNotNull(completeElement);
+		Assert.assertEquals("Your order on My Store is complete.", completeElement.getText().trim());
 	}
 
 }

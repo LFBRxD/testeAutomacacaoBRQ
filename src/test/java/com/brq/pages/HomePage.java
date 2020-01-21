@@ -6,13 +6,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 public class HomePage {
-	
+
 	@FindBy(how = How.LINK_TEXT, linkText = "Blouse")
-	WebElement blouseItem;
-	
-	WebDriver driver;
-	
-	
+	private WebElement blouseItem;
+
+	private WebDriver driver;
+
 	public HomePage(WebDriver driver) {
 		this.driver = driver;
 	}
@@ -20,10 +19,9 @@ public class HomePage {
 	public WebElement getBlouseItem() {
 		return blouseItem;
 	}
-	
+
 	public void setBlouseItem(WebElement blouseItem) {
 		this.blouseItem = blouseItem;
 	}
-	
-	
+
 }

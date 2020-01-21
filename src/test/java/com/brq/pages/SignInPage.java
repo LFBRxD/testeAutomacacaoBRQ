@@ -7,21 +7,21 @@ import org.openqa.selenium.support.How;
 
 public class SignInPage {
 	@FindBy(how = How.ID, id = "SubmitCreate")
-	WebElement btnCreateAcc;
+	private WebElement btnCreateAcc;
 
 	@FindBy(how = How.ID, id = "SubmitLogin")
-	WebElement btnSignin;
+	private WebElement btnSignin;
 
-	WebDriver driver;
+	private WebDriver driver;
 
 	@FindBy(how = How.ID, id = "email")
-	WebElement txtLogEmail;
+	private WebElement txtLogEmail;
 
 	@FindBy(how = How.ID, id = "passwd")
-	WebElement txtLogPass;
+	private WebElement txtLogPass;
 
 	@FindBy(how = How.ID, id = "email_create")
-	WebElement txtRegEmail;
+	private WebElement txtRegEmail;
 
 	public SignInPage(WebDriver driver) {
 		this.driver = driver;
